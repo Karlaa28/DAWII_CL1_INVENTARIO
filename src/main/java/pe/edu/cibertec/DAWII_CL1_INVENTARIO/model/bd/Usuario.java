@@ -13,8 +13,7 @@ public class Usuario {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "idusuario")
-    private int idUsuario;
+    private Integer idusuario;
 
     @Column(name = "usuario")
     private String usuario;
@@ -26,7 +25,7 @@ public class Usuario {
     private String apellido;
 
     @Column(name = "estado")
-    private int estado;
+    private Boolean estado;
 
     @Column(name = "telefono")
     private String telefono;
@@ -34,12 +33,15 @@ public class Usuario {
     @Column(name = "correo")
     private String correo;
 
+<<<<<<< HEAD
+=======
     @Column(name = "fechanacimiento")
     private java.sql.Date fechaNacimiento;
 
     @Column(name = "direccion")
     private String direccion;
 
+>>>>>>> main
     @Column(name = "comentario")
     private String comentario;
 
