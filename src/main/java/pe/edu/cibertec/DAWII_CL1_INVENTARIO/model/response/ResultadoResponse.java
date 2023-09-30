@@ -8,5 +8,4 @@ import lombok.Data;
 public class ResultadoResponse {
     private Boolean respuesta;
     private String mensaje;
-
 }

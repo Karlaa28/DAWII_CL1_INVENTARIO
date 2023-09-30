@@ -5,12 +5,12 @@
     <title>Title</title>
 </head>
 <body>
-<script th:src="@{/scripts/web/backoffice/product/frmMantProduct.js}"
+<script th:src="@{/scripts/web/backoffice/articulo/frmArticulo.js}"
         type="text/javascript"></script>
 <nav th:replace="~{layout::menu}"></nav>
 <div class="card ">
     <div class="card-header text-bg-dark mb-3">
-        Mantenimiento de Productos
+        Mantenimiento de artículos
     </div>
     <div class="card-body">
         <button id="btnagregar"
@@ -20,69 +20,99 @@
         <table id="tblproducto" class="table">
             <thead>
             <tr>
-                <th scope="col">Código</th>
-                <th scope="col">Producto</th>
-                <th scope="col">Precio Unitario</th>
+                <th scope="col">ID</th>
                 <th scope="col">Categoria</th>
-                <th scope="col">Proveedor</th>
+                <th scope="col">Código</th>
+                <th scope="col">Imagen</th>
+                <th scope="col">Articulo</th>
+                <th scope="col">Precio</th>
+                <th scope="col">Descripción</th>
+                <th scope="col">Fecha creación</th>
                 <th scope="col">Actualizar</th>
+                <th scope="col">Estado</th>
             </tr>
             </thead>
             <tbody>
-            <tr th:each="prod :${listaProductos}">
-                <td th:text="${prod.productid}"></td>
-                <td th:text="${prod.productname}"></td>
-                <td th:text="${prod.unitprice}"></td>
-                <td th:text="${prod.categories.categoryname}"></td>
-                <td th:text="${prod.suppliers.companyname}"></td>
+            <tr th:each="art :${listarArticulos}">
+                <td th:text="${art.idarticulo}"></td>
+                <td th:text="${art.categoria.nombre}"></td>
+                <td th:text="${art.codigo}"></td>
+                <td th:text="${art.imagenurl}"></td>
+                <td th:text="${art.nombre}"></td>
+                <td th:text="${art.precioventa}"></td>
+                <td th:text="${art.descripcion}"></td>
+                <td th:text="${art.fechacreacion}"></td>
+                <td th:text="${art.fechaactualizacion}"></td>
+                <td th:text="${art.estado}"></td>
                 <td>
                     <button type="button" class="btn btn-info btnactualizar"
-                            th:data-prodcod="${prod.productid}"
-                            th:data-prodname="${prod.productname}"
-                            th:data-produnit="${prod.unitprice}"
-                            th:data-prodcateg="${prod.categories.categoryid}"
-                            th:data-prodprov="${prod.suppliers.supplierid}"
-                            th:data-descontinuado="${prod.discontinued}"><i class="fas fa-edit"></i></button>
+                            th:data-idarticulo="${art.idarticulo}"
+                            th:data-idcategoria="${art.categoria.idcategoria}"
+                            th:data-codigo="${art.codigo}"
+                            th:data-imagenurl="${art.imagenurl}"
+                            th:data-nombre="${art.nombre}"
+                            th:data-precioventa="${art.precioventa}"
+                            th:data-descripcion="${art.descripcion}"
+                            th:data-fechacreacion="${art.fechacreacion}"
+                            th:data-fechaactualizacion="${art.fechaactualizacion}"
+                            th:data-estado="${art.estado}"
+                            ><i class="fas fa-edit"></i></button>
                 </td>
             </tr>
             </tbody>
         </table>
     </div>
 </div>
-<!-- Modal Registrar / Actualizar Producto -->
+<!-- Modal Registrar / Actualizar Articulo -->
 <div class="modal fade" id="modalNuevo" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
+    <div class="modal-dialog modal-xl ">
+        <div class="modal-content ">
             <div class="modal-header">
                 <h1 class="modal-title fs-5" id="exampleModalLabel">Producto</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <div class="mb-3">
-                    <label for="txtnomproducto" class="form-label">Nombre</label>
-                    <input type="text" class="form-control" id="txtnomproducto">
-                </div>
-                <div class="mb-3">
-                    <label for="txtpreciounit" class="form-label">Precio Unitario</label>
-                    <input type="number" class="form-control" id="txtpreciounit">
-                </div>
-                <div class="mb-3">
-                    <label for="cbocategoria" class="form-label">Categoria</label>
-                    <select id="cbocategoria" class="form-control"></select>
-                </div>
-                <div class="mb-3">
-                    <label for="cboproveedor" class="form-label">Proveedor</label>
-                    <select id="cboproveedor" class="form-control"></select>
-                </div>
-                <div class="form-check form-switch" id="switchproducto">
-                    <input class="form-check-input" type="checkbox" role="switch" id="chkdescontinuado">
-                    <label class="form-check-label" for="chkdescontinuado">Descontinuado</label>
-                </div>
-                <input type="hidden" id="hddcodprod" value="0">
+                <form action="/categorias" method="post" enctype="multipart/form-data">
+                    <div class="row gap-5">
+                        <div class="col-md-3">
+                            <label for="cbocategoria" class="form-label">Categoria</label>
+                            <select id="cbocategoria" class="form-control"></select>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="articulonombre" class="form-label">Nombre</label>
+                            <input type="text" class="form-control" id="articulonombre" name="articulonombre">
+                        </div>
+                        <div class="col-md-3">
+                            <label for="codigo" class="form-label">Código</label>
+                            <input type="number" class="form-control" id="codigo" name="preciounitario">
+                        </div>
+                        <div class="col-md-3">
+                                <label for="precioventa" class="form-label">Precio venta</label>
+                                <input type="number" class="form-control" id="precioventa" name="precioventa">
+                        </div>
+                        <div class="col-md-3">
+                            <label for="preciounitario" class="form-label">Precio Unitario</label>
+                            <input type="number" class="form-control" id="preciounitario" name="preciounitario">
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-check form-switch" id="switchproducto">
+                                <input class="form-check-input" type="checkbox" role="switch" id="chkestado">
+                                <label class="form-check-label" for="chkestado">Descontinuado</label>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3 d-flex flex-column">
+                            <label for="descripcion" class="form-label">Descripción</label>
+                            <textarea id="descripcion" name="descripcion"></textarea>
+                        </div>
+                    </div>
+
+                    <input type="hidden" id="hddcodprod" name="idproducto" value="0">
+                </form>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="fas fa-times"></i> Cancelar</button>
-                <button type="button" id="btnguardar" class="btn btn-primary"><i class="fas fa-save"></i> Guardar</button>
+                <button type="submit" id="btnguardar" class="btn btn-primary"><i class="fas fa-save"></i> Guardar</button>
             </div>
         </div>
     </div>

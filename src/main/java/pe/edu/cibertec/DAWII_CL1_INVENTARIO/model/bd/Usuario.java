@@ -33,6 +33,15 @@ public class Usuario {
     @Column(name = "correo")
     private String correo;
 
+<<<<<<< HEAD
+=======
+    @Column(name = "fechanacimiento")
+    private java.sql.Date fechaNacimiento;
+
+    @Column(name = "direccion")
+    private String direccion;
+
+>>>>>>> main
     @Column(name = "comentario")
     private String comentario;
 
