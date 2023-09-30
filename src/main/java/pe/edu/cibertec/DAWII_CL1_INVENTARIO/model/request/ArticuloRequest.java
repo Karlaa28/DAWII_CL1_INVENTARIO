@@ -17,5 +17,5 @@ public class ArticuloRequest {
     private String imagenurl;
     private Double preciounitario;
     private Double precioventa;
-    private Categoria categoria;
+    private Integer idcategoria;
 }
