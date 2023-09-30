@@ -13,11 +13,11 @@ public class Rol {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "idrol")
-    private int idRol;
+    private int idrol;
     @Column(name = "fechacreacion")
-    private Date fechaCreacion;
+    private Date fechacreacion;
     @Column(name = "nombrerol")
-    private String nombreRol;
+    private String nombrerol;
     @Column(name = "estado")
     private int estado;
     @Column(name = "descripcion")

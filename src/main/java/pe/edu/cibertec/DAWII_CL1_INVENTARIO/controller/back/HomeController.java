@@ -1,4 +1,4 @@
-package pe.edu.cibertec.appwebventascibertec.controller.backoffice;
+package pe.edu.cibertec.DAWII_CL1_INVENTARIO.controller.back;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;

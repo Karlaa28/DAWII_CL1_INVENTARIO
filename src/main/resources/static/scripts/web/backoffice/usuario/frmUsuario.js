@@ -1,47 +1,63 @@
-$(document).on("click", "#btnagregar", function(){
-    $("#txtnomproducto").val("");
-    $("#txtpreciounit").val("");
-    $("#hddcodprod").val("0");
-    $("#cbocategoria").empty();
-    $("#cboproveedor").empty();
-    $("#switchproducto" ).hide();
-    $("#chkdescontinuado").prop("checked", false);
-    listarCboCategoriasProveedores(0,0);
+function listarCboRoles(idrol) {
+    $.ajax({
+        type: "GET",
+        url: "/rol/listar", // Ajusta la URL según tu estructura de rutas
+        dataType: "json",
+        success: function(resultado){
+            $.each(resultado, function(index, value){
+                $("#cborol").append(
+                    `<option value="${value.idrol}">${value.nombrerol}</option>`
+                );
+            });
+            if (idrol > 0) {
+                $("#cborol").val(idrol);
+            }
+        },
+        error: function() {
+            console.error("Error al obtener la lista de roles");
+        }
+    });
+}
+
+// Llamada a la función al hacer clic en el botón de agregar usuario
+$(document).on("click", "#btnAgregar", function(){
+    // Limpiar campos y listar roles
+    $("#txtusuario").val("");
+    $("#txtnombre").val("");
+    $("#txtapellido").val("");
+    $("#txttelefono").val("");
+    $("#txtcorreo").val("");
+    $("#txtcomentario").val("");
+    $("#cborol").empty();
+    $("#chkestado").prop("checked", true);
+    $("#hddcodusuario").val("0");
+
+    listarCboRoles(0); // Llamar con idrol 0 al agregar un nuevo usuario
+
+    // Mostrar el modal de Usuario
     $("#modalNuevo").modal("show");
 });
 
-$(document).on("click", ".btnactualizar", function(){
-    $("#txtnomproducto").val($(this).attr("data-prodname"));
-    $("#txtpreciounit").val($(this).attr("data-produnit"));
-    $("#hddcodprod").val($(this).attr("data-prodcod"));
-    $("#cbocategoria").empty();
-    $("#cboproveedor").empty();
-    listarCboCategoriasProveedores($(this).attr("data-prodcateg"), $(this).attr("data-prodprov"));
-    $("#switchproducto" ).show();
-    console.log($(this).attr("data-descontinuado"));
-    if($(this).attr("data-descontinuado") === "true"){
-        $("#chkdescontinuado").prop("checked", true);
-    }else
-        $("#chkdescontinuado").prop("checked", false);
-    $("#modalNuevo").modal("show");
-});
 
 $(document).on("click", "#btnguardar", function(){
     $.ajax({
         type: "POST",
-        url: "/product/guardar",
+        url: "/usuario/guardar",
         contentType: "application/json",
         data: JSON.stringify({
-            productid: $("#hddcodprod").val(),
-            productname: $("#txtnomproducto").val(),
-            unitprice: $("#txtpreciounit").val(),
-            categoryid: $("#cbocategoria").val(),
-            supplierid: $("#cboproveedor").val(),
-            discontinued: $('#chkdescontinuado').prop('checked')
+            idusuario: $("#hddcodusuario").val(),
+            usuario: $("#txtusuario").val(),
+            nombre: $("#txtnombre").val(),
+            apellido: $("#txtapellido").val(),
+            telefono: $("#txttelefono").val(),
+            correo: $("#txtcorreo").val(),
+            comentario: $("#txtcomentario").val(),
+            estado: $('#chkestado').prop('checked'),
+            idrol: $("#cborol").val()
         }),
         success: function(resultado){
             if(resultado.respuesta){
-                listarProductos();
+                listarUsuarios();
             }
             alert(resultado.mensaje);
         }
@@ -49,61 +65,55 @@ $(document).on("click", "#btnguardar", function(){
     $("#modalNuevo").modal("hide");
 });
 
-function listarCboCategoriasProveedores(idcategoria, idproveedor){
-    $.ajax({
-        type: "GET",
-        url: "/category/listar",
-        dataType: "json",
-        success: function(resultado){
-            $.each(resultado, function(index, value){
-                $("#cbocategoria").append(
-                    `<option value="${value.categoryid}">${value.categoryname}</option>`
-                )
-            });
-            if(idcategoria > 0){
-                $("#cbocategoria").val(idcategoria);
-            }
-            $.ajax({
-                    type: "GET",
-                    url: "/supplier/listar",
-                    dataType: "json",
-                    success: function(resultado){
-                        $.each(resultado, function(index, value){
-                            $("#cboproveedor").append(
-                                `<option value="${value.supplierid}">${value.companyname}</option>`
-                            )
-                        });
-                        if(idproveedor > 0){
-                            $("#cboproveedor").val(idproveedor);
-                        }
-                    }
-                })
-        }
-    });
-}
+$(document).on("click", ".btnactualizar", function(){
+    $("#txtusuario").val($(this).attr("data-usuario"));
+    $("#txtnombre").val($(this).attr("data-nombre"));
+    $("#txtapellido").val($(this).attr("data-apellido"));
+    $("#txttelefono").val($(this).attr("data-telefono"));
+    $("#txtcorreo").val($(this).attr("data-correo"));
+    $("#txtcomentario").val($(this).attr("data-comentario"));
+    $("#hddcodusuario").val($(this).attr("data-usuarioid"));
+    $("#cborol").empty();
+    listarCboRoles($(this).attr("data-idrol"));
+    $("#switchusuario").show();
 
-function listarProductos(){
+    console.log($(this).attr("data-estado"));
+        if($(this).attr("data-estado") === "true"){
+            $("#chkestado").prop("checked", true);
+        }else
+            $("#chkestado").prop("checked", false);
+        $("#modalNuevo").modal("show");
+});
+
+
+
+function listarUsuarios(){
     $.ajax({
         type: "GET",
-        url: "/product/listar",
+        url: "/usuario/listar", // Asegúrate de tener la ruta correcta
         dataType: "json",
         success: function(resultado){
-            $("#tblproducto > tbody").html("");
+            $("#tblusuario > tbody").html("");
             $.each(resultado, function(index, value){
-                $("#tblproducto > tbody").append("<tr>"+
-                    "<td>"+value.productid+"</td>"+
-                    "<td>"+value.productname+"</td>"+
-                    "<td>"+value.unitprice+"</td>"+
-                    "<td>"+value.categories.categoryname+"</td>"+
-                    "<td>"+value.suppliers.companyname+"</td>"+
+                $("#tblusuario > tbody").append("<tr>"+
+                    "<td>"+value.idusuario+"</td>"+
+                    "<td>"+value.usuario+"</td>"+
+                    "<td>"+value.nombre+"</td>"+
+                    "<td>"+value.apellido+"</td>"+
+                    "<td>"+value.telefono+"</td>"+
+                    "<td>"+value.correo+"</td>"+
+                    "<td>"+value.comentario+"</td>"+
+                    "<td>"+value.rol.nombrerol+"</td>"+
                     "<td>"+
                         "<button type='button' class='btn btn-info btnactualizar'"+
-                                     "data-prodcod='"+value.productid+"'"+
-                                     "data-prodname='"+value.productname+"'"+
-                                     "data-produnit='"+value.unitprice+"'"+
-                                     "data-prodcateg='"+value.categories.categoryid+"'"+
-                                     "data-prodprov='"+value.suppliers.supplierid+"'"+
-                                     "data-descontinuado='"+value.discontinued+"'"+
+                                     "data-usuarioid='"+value.idusuario+"'"+
+                                     "data-usuario='"+value.usuario+"'"+
+                                     "data-nombre='"+value.nombre+"'"+
+                                     "data-apellido='"+value.apellido+"'"+
+                                     "data-telefono='"+value.telefono+"'"+
+                                     "data-correo='"+value.correo+"'"+
+                                     "data-comentario='"+value.comentario+"'"+
+                                     "data-rol='"+value.rol.idrol+"'"+
                                      "><i class='fas fa-edit'></i></button>"+
                     "</td></tr>");
             })
