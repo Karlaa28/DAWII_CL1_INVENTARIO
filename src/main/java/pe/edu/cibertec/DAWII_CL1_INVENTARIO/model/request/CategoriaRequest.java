@@ -4,7 +4,7 @@ import java.util.Date;
 
 @Data
 public class CategoriaRequest {
-    private Integer idCategoria;
+    private Integer idcategoria;
     private Date fechacreacion;
     private Date fechaactualizacion;
     private int estado;

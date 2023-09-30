@@ -4,9 +4,9 @@ $(document).on("click", "#btnagregar", function(){
     $("#hddcodprod").val("0");
     $("#cbocategoria").empty();
     $("#cboproveedor").empty();
-    $("#switchproducto" ).hide();
+    $("#switchproducto" ).show();
     $("#chkdescontinuado").prop("checked", false);
-    listarCboCategoriasProveedores(0,0);
+    listarCategorias(0,0);
     $("#modalNuevo").modal("show");
 });
 
@@ -16,7 +16,8 @@ $(document).on("click", ".btnactualizar", function(){
     $("#hddcodprod").val($(this).attr("data-prodcod"));
     $("#cbocategoria").empty();
     $("#cboproveedor").empty();
-    listarCboCategoriasProveedores($(this).attr("data-prodcateg"), $(this).attr("data-prodprov"));
+
+    listarCategorias($(this).attr("data-prodcateg"), $(this).attr("data-prodprov"));
     $("#switchproducto" ).show();
     console.log($(this).attr("data-descontinuado"));
     if($(this).attr("data-descontinuado") === "true"){
@@ -27,21 +28,23 @@ $(document).on("click", ".btnactualizar", function(){
 });
 
 $(document).on("click", "#btnguardar", function(){
+
     $.ajax({
         type: "POST",
-        url: "/product/guardar",
+        url: "/articulos/guardar",
         contentType: "application/json",
         data: JSON.stringify({
-            productid: $("#hddcodprod").val(),
-            productname: $("#txtnomproducto").val(),
-            unitprice: $("#txtpreciounit").val(),
-            categoryid: $("#cbocategoria").val(),
-            supplierid: $("#cboproveedor").val(),
-            discontinued: $('#chkdescontinuado').prop('checked')
-        }),
+               nombre: $("#articulonombre").val(),
+               preciounitario: $("#preciounitario").val(),
+               precioventa: $("#precioventa").val(),
+               idcategoria:Number($("#cbocategoria").val()),
+               descripcion: $("#descripcion").val(),
+               codigo: $("#codigo").val(),
+               estado: $('#chkestado').prop('checked')?1:0
+               }),
         success: function(resultado){
             if(resultado.respuesta){
-                listarProductos();
+                listarArticulos();
             }
             alert(resultado.mensaje);
         }
@@ -49,61 +52,49 @@ $(document).on("click", "#btnguardar", function(){
     $("#modalNuevo").modal("hide");
 });
 
-function listarCboCategoriasProveedores(idcategoria, idproveedor){
+function listarCategorias(idcategoria){
     $.ajax({
         type: "GET",
-        url: "/category/listar",
+        url: "/categorias/listar",
         dataType: "json",
         success: function(resultado){
             $.each(resultado, function(index, value){
                 $("#cbocategoria").append(
-                    `<option value="${value.categoryid}">${value.categoryname}</option>`
+                    `<option value="${value.idcategoria}">${value.nombre}</option>`
                 )
             });
             if(idcategoria > 0){
                 $("#cbocategoria").val(idcategoria);
             }
-            $.ajax({
-                    type: "GET",
-                    url: "/supplier/listar",
-                    dataType: "json",
-                    success: function(resultado){
-                        $.each(resultado, function(index, value){
-                            $("#cboproveedor").append(
-                                `<option value="${value.supplierid}">${value.companyname}</option>`
-                            )
-                        });
-                        if(idproveedor > 0){
-                            $("#cboproveedor").val(idproveedor);
-                        }
-                    }
-                })
+
         }
     });
 }
 
-function listarProductos(){
+function listarArticulos(){
     $.ajax({
         type: "GET",
         url: "/product/listar",
         dataType: "json",
         success: function(resultado){
-            $("#tblproducto > tbody").html("");
+            $("#tbarticulos > tbody").html("");
             $.each(resultado, function(index, value){
-                $("#tblproducto > tbody").append("<tr>"+
-                    "<td>"+value.productid+"</td>"+
-                    "<td>"+value.productname+"</td>"+
-                    "<td>"+value.unitprice+"</td>"+
-                    "<td>"+value.categories.categoryname+"</td>"+
-                    "<td>"+value.suppliers.companyname+"</td>"+
+                $("#tbarticulos > tbody").append("<tr>"+
+                    "<td>"+value.idarticulo+"</td>"+
+                    "<td>"+value.categoria.nombre+"</td>"+
+                     "<td>"+value.codigo+"</td>"+
+                     "<td>"+value.imagenurl+"</td>"+
+                    "<td>"+value.nombre+"</td>"+
+                    "<td>"+value.precioventa+"</td>"+
+                     "<td>"+value.descripcion+"</td>"+
+                     "<td>"+value.fechacreacion+"</td>"+
+                     "<td>"+value.fechaactualizacion+"</td>"+
+                     "<td>"+value.estado+"</td>"+
                     "<td>"+
                         "<button type='button' class='btn btn-info btnactualizar'"+
-                                     "data-prodcod='"+value.productid+"'"+
-                                     "data-prodname='"+value.productname+"'"+
-                                     "data-produnit='"+value.unitprice+"'"+
-                                     "data-prodcateg='"+value.categories.categoryid+"'"+
-                                     "data-prodprov='"+value.suppliers.supplierid+"'"+
-                                     "data-descontinuado='"+value.discontinued+"'"+
+                                     "data-idarticulo='"+value.idarticulo+"'"+
+                                     "data-codigo='"+value.codigo+"'"+
+
                                      "><i class='fas fa-edit'></i></button>"+
                     "</td></tr>");
             })

@@ -12,7 +12,10 @@ import java.util.Date;
 @Table(name = "articulo")
 public class Articulo {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "idarticulo")
     private Integer idarticulo;
+
     @Column(name="fechacreacion")
     private Date fechacreacion;
     @Column(name="fechaactualizacion")
@@ -27,6 +30,7 @@ public class Articulo {
     private String descripcion;
     @Column(name="codigo")
     private String codigo;
+
     @Column(name="imagenurl")
     private String imagenurl;
     @Column(name="preciounitario")
@@ -34,6 +38,6 @@ public class Articulo {
     @Column(name="precioventa")
     private Double precioventa;
     @ManyToOne
-    @JoinColumn(name = "categoriaid")
+    @JoinColumn(name = "idcategoria")
     private Categoria categoria;
 }

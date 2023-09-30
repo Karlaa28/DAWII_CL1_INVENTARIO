@@ -37,9 +37,6 @@ public class Usuario {
     @Column(name = "fechanacimiento")
     private java.sql.Date fechaNacimiento;
 
-    @Column(name = "idrol")
-    private Long idRol;
-
     @Column(name = "direccion")
     private String direccion;
 
